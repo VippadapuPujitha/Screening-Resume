@@ -9,6 +9,7 @@ st.markdown("""
     text-align: center;
     font-size: 52px;
     font-weight: 800;
+    margin-top: 150px;
 }
 .sub-title {
     text-align: center;
@@ -30,3 +31,4 @@ with col2:
     with b2:
         if st.button("Register", use_container_width=True):
             st.switch_page("pages/register.py")
+
