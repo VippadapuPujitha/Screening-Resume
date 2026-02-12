@@ -1,34 +1,38 @@
 import streamlit as st
-
-st.set_page_config(page_title="Welcome", layout="centered")
+import re
 
 st.markdown("""
 <style>
 [data-testid="stSidebar"] { display: none; }
-.big-title {
-    text-align: center;
-    font-size: 52px;
-    font-weight: 800;
-    margin-top: 150px;
-}
-.sub-title {
-    text-align: center;
-    font-size: 20px;
-    margin-bottom: 30px;
-}
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<div class='big-title'>Resume Screening System</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-title'>Smart resume analysis for better hiring</div>", unsafe_allow_html=True)
+st.title("Register")
 
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    b1, b2 = st.columns(2)
-    with b1:
-        if st.button("Login", use_container_width=True):
-            st.switch_page("pages/login.py")
-    with b2:
-        if st.button("Register", use_container_width=True):
-            st.switch_page("pages/register.py")
+# Initialize users storage
+if "users" not in st.session_state:
+    st.session_state.users = {}
+
+email = st.text_input("Email ID")
+password = st.text_input("Password", type="password")
+confirm_password = st.text_input("Confirm Password", type="password")
+
+def is_valid_email(mail):
+    return re.match(r"[^@]+@[^@]+\.[^@]+", mail)
+
+if st.button("Register"):
+    if not email or not password or not confirm_password:
+        st.error("Please fill all fields")
+    elif not is_valid_email(email):
+        st.error("Enter a valid email address")
+    elif email in st.session_state.users:
+        st.error("This email is already registered")
+    elif password != confirm_password:
+        st.error("Passwords do not match")
+    else:
+        st.session_state.users[email] = {
+            "password": password
+        }
+        st.success("Registration successful! Please login.")
+        st.switch_page("pages/login.py")
 
